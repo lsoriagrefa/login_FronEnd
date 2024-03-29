@@ -23,37 +23,50 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   name: 'HomeView',
-  components: {
-
-  },
-  data: function () {
+  data() {
     return {
       usuario: "",
       contrasenia: "",
-      error: false
-    }
+      error: false,
+      loading: false // Agregamos la propiedad loading al objeto data
+    };
   },
   methods: {
     async login() {
       this.loading = true;
+
       let json = {
-        "usuario": this.usuario,
-        "contrasenia": this.contrasenia
+        usuario: this.usuario,
+        contrasenia: this.contrasenia
       };
-      const response = await axios.post('http://localhost:8090/api/v1/login', json);
-      if (response.data.error) {
-        // Si hay un error, muestra un mensaje de alerta con el mensaje de error recibido del backend
-        alert(response.data.mensaje);
-      } else {
-        // Si no hay error, muestra un mensaje de alerta indicando que el usuario fue encontrado
-        alert(response.data.mensaje);
+
+      let config = {
+        headers: {
+          "token": "123"
+        }
+      };
+
+      try {
+        const response = await axios.post('http://localhost:8090/api/v1/login', json, config);
+        if (response.data.error) {
+          alert(response.data.mensaje);
+        } else {
+          alert(response.data.mensaje);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+        alert("Ocurrió un error en la solicitud.");
+      } finally {
+        this.loading = false;
       }
     }
   }
-}
+};
 </script>
+
 
 <style>
 html {
