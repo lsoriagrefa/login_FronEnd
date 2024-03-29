@@ -5,7 +5,7 @@
         <!-- Icon -->
         <div class="fadeIn first" style="padding: 40px;">
           <h4>REGISTRO DE USUARIO</h4>
-          <img src="@/assets/login.png" id="icon" alt="User Icon"  style="width: 90px; height: px;"/>
+          <img src="@/assets/login.png" id="icon" alt="User Icon" style="width: 90px; height: px;" />
         </div>
 
         <form v-on:submit.prevent="register">
@@ -26,22 +26,30 @@
           </div>
 
           <input v-if="tipoIdentificacion === 'CI'" type="text" class="fadeIn sixth" placeholder="CI"
-            v-model="identificacion" minlength="10" maxlength="10" required @input="search"  @keydown="validateNumberInput($event)">
+            v-model="identificacion" minlength="10" maxlength="10" required @input="search"
+            @keydown="validateNumberInput($event)">
           <input v-if="tipoIdentificacion === 'RUC'" type="text" class="fadeIn sixth" placeholder="RUC"
-            v-model="identificacion" minlength="13" maxlength="13" required @input="search" @keydown="validateNumberInput($event)">
+            v-model="identificacion" minlength="13" maxlength="13" required @input="search"
+            @keydown="validateNumberInput($event)">
           <input v-if="tipoIdentificacion === 'Pasaporte'" type="text" class="fadeIn sixth" placeholder="Pasaporte"
             v-model="identificacion" minlength="6" maxlength="20" required @input="search">
 
-          <input type="text" class="fadeIn second" placeholder="Usuario" v-model="usuario" minlength="8" maxlength="12" required>
-          <input type="password" class="fadeIn third" placeholder="Contraseña" v-model="contrasenia" minlength="8" maxlength="12" required>
-          <input type="password" class="fadeIn fourth" placeholder="Confirmar Contraseña" v-model="confirmarContrasenia" minlength="8" maxlength="12" required>
-          <input type="text" class="fadeIn fourth" placeholder="Nombre" v-model="nombre" @input="validarSoloLetras('nombre')" minlength="3" maxlength="15" required>
-          <input type="text" class="fadeIn fifth" placeholder="Apellido" v-model="apellido" @input="validarSoloLetras('apellido')" minlength="3" maxlength="15" required>
+          <input type="text" class="fadeIn second" placeholder="Usuario" v-model="usuario" minlength="8" maxlength="12"
+            required>
+          <input type="password" class="fadeIn third" placeholder="Contraseña" v-model="contrasenia" minlength="8"
+            maxlength="12" required>
+          <input type="password" class="fadeIn fourth" placeholder="Confirmar Contraseña" v-model="confirmarContrasenia"
+            minlength="8" maxlength="12" required>
+          <input type="text" class="fadeIn fourth" placeholder="Nombre" v-model="nombre"
+            @input="validarSoloLetras('nombre')" minlength="3" maxlength="15" required>
+          <input type="text" class="fadeIn fifth" placeholder="Apellido" v-model="apellido"
+            @input="validarSoloLetras('apellido')" minlength="3" maxlength="15" required>
           <input type="submit" class="fadeIn fourth" value="Registrar">
 
           <input type="button" class="fadeIn fourth" value="Eliminar" @click="eliminarUsuario">
 
-          <input type="button" class="fadeIn fourth" value="Modificar" :disabled="!usuarioEncontrado" @click="modificarUsuario">
+          <input type="button" class="fadeIn fourth" value="Modificar" :disabled="!usuarioEncontrado"
+            @click="modificarUsuario">
 
         </form>
 
@@ -66,7 +74,7 @@ export default {
       apellido: '',
       identificacion: '',
       tipoIdentificacion: '',
-       usuarioEncontrado: false
+      usuarioEncontrado: false
     };
   },
   methods: {
@@ -83,8 +91,12 @@ export default {
         apellido: this.apellido,
         identificacion: this.identificacion
       };
-
-      axios.post('http://localhost:8090/api/v1/registro', usuario)
+      let config = {
+        headers: {
+          "token": "123"
+        }
+      };
+      axios.post('http://localhost:8090/api/v1/registro', usuario, config)
         .then(response => {
           if (response.data.error) {
             alert(response.data.mensaje);
@@ -116,9 +128,9 @@ export default {
         });
     },
     validateNumberInput(event) {
-      const allowedCharacters = /[0-9]/; 
-      const allowedKeys = ['Backspace', 'Delete']; 
-      
+      const allowedCharacters = /[0-9]/;
+      const allowedKeys = ['Backspace', 'Delete'];
+
       const inputChar = event.key;
 
       if (allowedKeys.includes(inputChar)) {
@@ -126,7 +138,7 @@ export default {
       }
 
       if (!allowedCharacters.test(inputChar)) {
-        event.preventDefault(); 
+        event.preventDefault();
       }
     },
     validarSoloLetras(campo) {
@@ -147,7 +159,7 @@ export default {
           })
           .catch(error => {
             console.error('Error al buscar:', error);
-            this.usuarioEncontrado = false; 
+            this.usuarioEncontrado = false;
           });
       }
     },
@@ -183,8 +195,12 @@ export default {
         apellido: this.apellido,
         identificacion: this.identificacion
       };
-
-      axios.put('http://localhost:8090/api/v1/registro', usuario)
+      let config = {
+        headers: {
+          "token": "123"
+        }
+      };
+      axios.put('http://localhost:8090/api/v1/registro', usuario, config)
         .then(() => {
           alert('Usuario modificado correctamente');
         })
@@ -475,18 +491,23 @@ input[type=password]::placeholder {
 .underlineHover:hover:after {
   width: 100%;
 }
+
 .radio-group {
   display: flex;
   justify-content: center;
-  margin:3px;
+  margin: 3px;
 }
 
 .radio-group input[type="radio"] {
-  margin: 30px; /* Ajusta el espacio horizontal entre los botones de radio */
+  margin: 30px;
+  /* Ajusta el espacio horizontal entre los botones de radio */
 }
+
 #formContent h4 {
-  padding: 10px; /* Agrega 20px de espacio después del h3 */
+  padding: 10px;
+  /* Agrega 20px de espacio después del h3 */
 }
+
 /* OTHERS */
 *:focus {
   outline: none;
