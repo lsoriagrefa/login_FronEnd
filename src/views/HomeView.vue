@@ -3,8 +3,8 @@
     <div class="wrapper fadeInDown">
       <div id="formContent">
 
-        <div class="fadeIn first">
-          <img src="@/assets/logo.png" id="icon" alt="User Icon" />
+        <div class="fadeIn first" style="padding: 40px;">
+          <img src="@/assets/login.png" id="icon" alt="User Icon" style="width: 180px; height: 180px;" />
         </div>
         <!-- Login Form -->
         <form v-on:submit.prevent="login">
