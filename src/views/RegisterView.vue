@@ -24,11 +24,11 @@
           </div>
 
           <input v-if="tipoIdentificacion === 'CI'" type="text" class="fadeIn sixth" placeholder="CI"
-            v-model="identificacion" minlength="10" maxlength="10" required>
+            v-model="identificacion" minlength="10" maxlength="10" required @input="search">
           <input v-if="tipoIdentificacion === 'RUC'" type="text" class="fadeIn sixth" placeholder="RUC"
-            v-model="identificacion" minlength="13" maxlength="13" required>
+            v-model="identificacion" minlength="13" maxlength="13" required @input="search">
           <input v-if="tipoIdentificacion === 'Pasaporte'" type="text" class="fadeIn sixth" placeholder="Pasaporte"
-            v-model="identificacion" minlength="6" maxlength="20" required @input="validateInput">
+            v-model="identificacion" minlength="6" maxlength="20" required @input="search">
 
           <input type="text" class="fadeIn second" placeholder="Usuario" v-model="usuario" maxlength="12" required>
           <input type="password" class="fadeIn third" placeholder="Contraseña" v-model="contrasenia" maxlength="12"
@@ -40,6 +40,11 @@
           <input type="text" class="fadeIn fifth" placeholder="Apellido" v-model="apellido"
             @input="validarSoloLetras('apellido')" maxlength="15" required>
           <input type="submit" class="fadeIn fourth" value="Registrar">
+
+          <input type="button" class="fadeIn fourth" value="Eliminar" @click="eliminarUsuario">
+
+          <input type="button" class="fadeIn fourth" value="Modificar" @click="modificarUsuario">
+
         </form>
 
       </div>
@@ -93,17 +98,68 @@ export default {
       // Reemplazar todos los caracteres no alfabéticos con una cadena vacía
       this[campo] = valorCampo.replace(/[^A-Za-z]/g, '');
     },
-    validateInput() {
-      // Expresión regular para permitir solo letras y números
-      const regex = /^[a-zA-Z0-9]*$/;
-      if (!regex.test(this.identificacion)) {
-        // Si el valor no coincide con la expresión regular, eliminar el último carácter ingresado
-        this.identificacion = this.identificacion.slice(0, -1);
+    search() {
+      if (this.identificacion !== '') {
+        axios.get(`http://localhost:8090/api/v1/registro/${this.identificacion}`)
+          .then(response => {
+            // Asignar los datos obtenidos a los campos correspondientes
+            this.usuario = response.data.usuario.usuario;
+            this.nombre = response.data.usuario.nombre;
+            this.contrasenia = response.data.usuario.contrasenia;
+            this.confirmarContrasenia = response.data.usuario.confirmarContrasenia;
+            this.apellido = response.data.usuario.apellido;
+          })
+          .catch(error => {
+            console.error('Error al buscar:', error);
+          });
       }
+    },
+    eliminarUsuario() {
+      if (this.identificacion !== '') {
+        axios.delete(`http://localhost:8090/api/v1/registro/${this.identificacion}`)
+          .then(response => {
+            alert(response.data.mensaje);
+            // Limpiar los campos después de eliminar el usuario
+            this.usuario = '';
+            this.contrasenia = '';
+            this.confirmarContrasenia = '';
+            this.nombre = '';
+            this.apellido = '';
+            this.identificacion = '';
+          })
+          .catch(error => {
+            console.error('Error al eliminar usuario:', error);
+          });
+      }
+    },
+    modificarUsuario() {
+      if (this.contrasenia !== this.confirmarContrasenia) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+
+      const usuario = {
+        usuario: this.usuario,
+        contrasenia: this.contrasenia,
+        confirmarContrasenia: this.confirmarContrasenia,
+        nombre: this.nombre,
+        apellido: this.apellido,
+        identificacion: this.identificacion
+      };
+
+      axios.put('http://localhost:8090/api/v1/registro', usuario)
+        .then(() => {
+          alert('Usuario modificado correctamente');
+        })
+        .catch(error => {
+          console.error('Error al modificar usuario:', error);
+          alert('Error al modificar usuario');
+        });
     }
   }
 };
 </script>
+
 
 <style>
 html {
@@ -132,27 +188,27 @@ h2 {
   color: #cccccc;
 }
 
-
-
 /* STRUCTURE */
-
 .wrapper {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  /* Ajusta el ancho al 100% del viewport */
   min-height: 100%;
   padding: 20px;
 }
 
 #formContent {
-  -webkit-border-radius: 10px 10px 10px 10px;
-  border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 450px;
+  /* Ancho del formulario ajustado al 90% del contenedor */
+  max-width: 600px;
+  /* Establece un ancho máximo para el formulario */
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
@@ -169,9 +225,7 @@ h2 {
   border-radius: 0 0 10px 10px;
 }
 
-
 /* TABS */
-
 h2.inactive {
   color: #cccccc;
 }
@@ -181,10 +235,7 @@ h2.active {
   border-bottom: 2px solid #5fbae9;
 }
 
-
-
 /* FORM TYPOGRAPHY*/
-
 input[type=button],
 input[type=submit],
 input[type=reset] {
@@ -199,8 +250,8 @@ input[type=reset] {
   font-size: 13px;
   -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   margin: 5px 20px 40px 20px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -225,40 +276,41 @@ input[type=reset]:active {
   transform: scale(0.95);
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
-  padding: 15px 32px;
+  padding: 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   margin: 5px;
-  width: 85%;
+  width: calc(80% - 95px);
+  /* Ancho de los campos de entrada ajustado */
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
-input[type=text]:focus {
+input[type=text]:focus,
+input[type=password]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]:placeholder {
+input[type=text]::placeholder,
+input[type=password]::placeholder {
   color: #cccccc;
 }
 
-
-
 /* ANIMATIONS */
-
 /* Simple CSS3 Fade-in-down Animation */
 .fadeInDown {
   -webkit-animation-name: fadeInDown;
@@ -387,39 +439,7 @@ input[type=text]:placeholder {
   width: 100%;
 }
 
-input[type=password] {
-  background-color: #f6f6f6;
-  border: none;
-  color: #0d0d0d;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 5px;
-  width: 85%;
-  border: 2px solid #f6f6f6;
-  -webkit-transition: all 0.5s ease-in-out;
-  -moz-transition: all 0.5s ease-in-out;
-  -ms-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
-}
-
-input[type=password]:focus {
-  background-color: #fff;
-  border-bottom: 2px solid #5fbae9;
-}
-
-input[type=password]::placeholder {
-  color: #cccccc;
-}
-
-
 /* OTHERS */
-
 *:focus {
   outline: none;
 }
