@@ -6,7 +6,6 @@
         <div class="fadeIn first">
           <img src="@/assets/logo.png" id="icon" alt="User Icon" />
         </div>
-
         <!-- Login Form -->
         <form v-on:submit.prevent="login">
           <input type="text" id="login" class="fadeIn second" name="login" placeholder="Usuario" v-model="usuario"
@@ -14,6 +13,8 @@
           <input type="password" id="contrasenia" class="fadeIn third" name="login" placeholder="Password"
             v-model="contrasenia" maxlength="12" required>
           <input type="submit" class="fadeIn fourth" value="Iniciar sesión">
+          <!-- Link para ir a registrar usuario-->
+          <router-link class="fadeIn fifth" to="/register">Registrar usuario</router-link>
         </form>
       </div>
     </div>
