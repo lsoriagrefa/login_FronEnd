@@ -13,9 +13,9 @@
           <input type="password" id="contrasenia" class="fadeIn third" name="login" placeholder="Password"
             v-model="contrasenia" maxlength="12" required>
           <input type="submit" class="fadeIn fourth" value="Iniciar sesión">
-          <!-- Link para ir a registrar usuario-->
-          <router-link class="fadeIn fifth" to="/register">Registrar usuario</router-link>
         </form>
+        <!-- Link para ir a registrar usuario-->
+        <router-link class="fadeIn fifth" to="/register">Registrar usuario</router-link>
       </div>
     </div>
   </div>
