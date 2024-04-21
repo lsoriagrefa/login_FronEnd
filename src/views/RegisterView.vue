@@ -1,11 +1,11 @@
 <template>
   <div class="register">
     <div class="wrapper fadeInDown">
-      <div id="formContent">
+      <div id="formContentl">
         <!-- Icon -->
         <div class="fadeIn first" style="padding: 40px;">
           <h4>REGISTRO DE USUARIO</h4>
-          <img src="@/assets/login.png" id="icon" alt="User Icon" style="width: 90px; height: px;" />
+          <img src="@/assets/login.png" id="icon" alt="User Icon" style="width: 80px; height:80px;" />
         </div>
 
         <form v-on:submit.prevent="register">
@@ -34,12 +34,12 @@
           <input v-if="tipoIdentificacion === 'Pasaporte'" type="text" class="fadeIn sixth" placeholder="Pasaporte"
             v-model="identificacion" minlength="6" maxlength="20" required @input="search">
 
-          <input type="text" class="fadeIn second" placeholder="Usuario" v-model="usuario" minlength="8" maxlength="12"
+          <input type="text" class="fadeIn second" placeholder="Usuario" v-model="usuario" minlength="6" maxlength="12"
             required>
-          <input type="password" class="fadeIn third" placeholder="Contraseña" v-model="contrasenia" minlength="8"
+          <input type="password" class="fadeIn third" placeholder="Contraseña" v-model="contrasenia" minlength="5"
             maxlength="12" required>
           <input type="password" class="fadeIn fourth" placeholder="Confirmar Contraseña" v-model="confirmarContrasenia"
-            minlength="8" maxlength="12" required>
+            minlength="5" maxlength="12" required>
           <input type="text" class="fadeIn fourth" placeholder="Nombre" v-model="nombre"
             @input="validarSoloLetras('nombre')" minlength="3" maxlength="15" required>
           <input type="text" class="fadeIn fifth" placeholder="Apellido" v-model="apellido"
@@ -214,14 +214,14 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 html {
   background-color: #56baed;
 }
 
 body {
   font-family: "Poppins", sans-serif;
-  height: 110vh;
+  height: 120vh;
 }
 
 a {
@@ -253,7 +253,7 @@ h2 {
   padding: 20px;
 }
 
-#formContent {
+#formContentl {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   background: #fff;
@@ -305,7 +305,7 @@ input[type=reset] {
   box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  margin: 5px 20px 40px 20px;
+  margin: 30px 20px 30px 20px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
@@ -339,8 +339,8 @@ input[type=password] {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 5px;
-  width: calc(88% - 80px);
+  margin: 10px;
+  width: calc(88% - 120px);
   /* Ancho de los campos de entrada ajustado */
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;

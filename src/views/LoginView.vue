@@ -1,21 +1,29 @@
 <template>
-  <div class="home">
+  <div class="login">
     <div class="wrapper fadeInDown">
       <div id="formContent">
 
         <div class="fadeIn first" style="padding: 40px;">
-          <img src="@/assets/login.png" id="icon" alt="User Icon" style="width: 180px; height: 180px;" />
+          <img src="@/assets/login.png" id="icon" alt="User Icon" />
         </div>
         <!-- Login Form -->
         <form v-on:submit.prevent="login">
-          <input type="text" id="login" class="fadeIn second" name="login" placeholder="Usuario" v-model="usuario"
-            maxlength="12" required>
-          <input type="password" id="contrasenia" class="fadeIn third" name="login" placeholder="Password"
-            v-model="contrasenia" maxlength="12" required>
+          <div class="input-container">
+            <IconoUser />
+            <input type="text" id="login" class="fadeIn second" name="login" v-model="usuario" maxlength="12" required>
+            <label class="form-label" for="form1Example13">Usuario</label>
+          </div>
+          <br />
+          <div class="input-container">
+            <IconoPassword />
+            <input type="password" id="contrasenia" class="fadeIn third" name="login" v-model="contrasenia" maxlength="12" required>
+            <label class="form-label" for="form1Example13">Contraseña</label>
+          </div>
           <input type="submit" class="fadeIn fourth" value="Iniciar sesión">
         </form>
+
         <!-- Link para ir a registrar usuario-->
-        <router-link class="fadeIn fifth" to="/register">Registrar usuario</router-link>
+        <router-link class="fadeIn-fifth" to="/register">Registrar usuario</router-link>
       </div>
     </div>
   </div>
@@ -23,9 +31,18 @@
 
 <script>
 import axios from 'axios';
+import IconoUser from 'vue-material-design-icons/AccountTie.vue';
+import IconoPassword from 'vue-material-design-icons/Lock.vue';
+
 
 export default {
-  name: 'HomeView',
+  name: 'LoginView',
+
+  components: {
+    IconoUser,
+    IconoPassword
+  },
+
   data() {
     return {
       usuario: "",
@@ -63,26 +80,20 @@ export default {
         this.loading = false;
       }
     }
-  }
+  },
+
 };
 </script>
 
 
-<style>
+<style scoped>
 html {
   background-color: #56baed;
 }
 
 body {
   font-family: "Poppins", sans-serif;
-  height: 100vh;
-}
-
-a {
-  color: #92badd;
-  display: inline-block;
-  text-decoration: none;
-  font-weight: 400;
+  height: 10vh;
 }
 
 h2 {
@@ -94,9 +105,32 @@ h2 {
   margin: 40px 8px 10px 8px;
   color: #cccccc;
 }
+/* Imagen */
+img{
+  width: 120px; 
+  height: 125px;
 
+}
+/* Para el input y label*/
+.input-container {
+  position: relative;
+}
 
-
+.input-container label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: #999;
+  transition: top 0.3s, font-size 0.3s, color 0.3s;
+  pointer-events: none; /* Evita que el label sea clickeable */
+  padding-left: 120px; /* Ajusta según sea necesario */
+}
+.input-container input:focus + label {
+  top: -10px;
+  font-size: 15px;
+  color: #333;
+}
 /* STRUCTURE */
 
 .wrapper {
@@ -115,7 +149,7 @@ h2 {
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 450px;
+  max-width: 500px;
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
@@ -132,8 +166,6 @@ h2 {
   border-radius: 0 0 10px 10px;
 }
 
-
-
 /* TABS */
 
 h2.inactive {
@@ -144,8 +176,6 @@ h2.active {
   color: #0d0d0d;
   border-bottom: 2px solid #5fbae9;
 }
-
-
 
 /* FORM TYPOGRAPHY*/
 
@@ -165,12 +195,13 @@ input[type=reset] {
   box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
-  margin: 5px 20px 40px 20px;
+  margin: 45px 20px 40px 20px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+  width: 300px;
 }
 
 input[type=button]:hover,
@@ -189,25 +220,27 @@ input[type=reset]:active {
   transform: scale(0.95);
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
-  padding: 15px 32px;
+  padding: 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   margin: 5px;
-  width: 85%;
+  width: calc(88% - 120px);
+  /* Ancho de los campos de entrada ajustado */
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 input[type=text]:focus {
@@ -218,8 +251,6 @@ input[type=text]:focus {
 input[type=text]:placeholder {
   color: #cccccc;
 }
-
-
 
 /* ANIMATIONS */
 
@@ -306,7 +337,13 @@ input[type=text]:placeholder {
   -moz-animation-duration: 1s;
   animation-duration: 1s;
 }
-
+.fadeIn-fifth{
+  margin-bottom: 24px;
+  text-align: right;
+  color: #82add3;
+  text-decoration: none;
+  font-weight: 400;
+}
 .fadeIn.first {
   -webkit-animation-delay: 0.4s;
   -moz-animation-delay: 0.4s;
@@ -360,8 +397,7 @@ input[type=password] {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 5px;
-  width: 85%;
+  margin: 4px;
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
